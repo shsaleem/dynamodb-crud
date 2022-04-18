@@ -8,19 +8,19 @@ const {
 const getAllCharacters = async (req, res) => {
   try {
     const characters = await getCharacters();
-    res.json(characters);
+    res.status(200).json(characters);
   } catch (err) {
-    res.status(500).json({ err: "Something went wrong" });
+    res.status(500).json({ error: err });
   }
 };
 
 const getSingleCharacter = async (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
   try {
     const character = await getCharacterById(id);
-    res.json(character);
+    res.status(200).json(character);
   } catch (err) {
-    res.status(500).json({ err: "Something went wrong" });
+    res.status(500).json({ error: err });
   }
 };
 
@@ -28,9 +28,11 @@ const addUpdateCharacter = async (req, res) => {
   const character = req.body;
   try {
     const newCharacter = await addOrUpdateCharacter(character);
-    res.json(newCharacter);
+    res.status(201).json({
+      message: "Character created successfully",
+    });
   } catch (err) {
-    res.status(500).json({ err: "Something went wrong" });
+    res.status(500).json({ error: err });
   }
 };
 
@@ -40,18 +42,23 @@ const updateCharacter = async (req, res) => {
   character.id = id;
   try {
     const newCharacter = await addOrUpdateCharacter(character);
-    res.json(newCharacter);
+    res.status(200).json({
+      message: "Character updated",
+    });
   } catch (err) {
-    res.status(500).json({ err: "Something went wrong" });
+    res.status(500).json({ error: err });
   }
 };
 
 const deleteSingleCharacter = async (req, res) => {
   const { id } = req.params;
   try {
-    res.json(await deleteCharacter(id));
+    await deleteCharacter(id);
+    res.status(200).json({
+      message: "Character deleted",
+    });
   } catch (err) {
-    res.status(500).json({ err: "Something went wrong" });
+    res.status(500).json({ error: err });
   }
 };
 
